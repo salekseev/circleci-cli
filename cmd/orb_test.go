@@ -1116,15 +1116,7 @@ var _ = Describe("Orb integration tests", func() {
 				// instead of Say() since we want to perform a substring match, not a regexp
 				// match
 				completeOutput := string(session.Wait().Out.Contents())
-				Expect(completeOutput).Should(ContainSubstring(expectedOutput))
-				// - join pages together
-				// - strip "data" k-v wrapper, leave v
-				// - ignore/remove "hasNextPage"
-				// - strip "orbs" k-v wrapper, leave v
-				// - take/keep "totalCount"
-				// - rename "edges" to "orbs"
-				// - ignore/remove "cursor"
-				// - strip "node" k-v wrapper, leave v
+				Expect(completeOutput).Should(MatchJSON(expectedOutput))
 				Expect(testServer.ReceivedRequests()).Should(HaveLen(2))
 			})
 		})

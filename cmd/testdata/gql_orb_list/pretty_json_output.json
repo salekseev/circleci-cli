@@ -1,26 +1,5 @@
 {
-  "totalCount": 22,
   "orbs": [
-    {
-      "name": "ahgfsdlkfhjaklshdkfhaksldjfkasdlfjas/foo",
-      "versions": []
-    },
-    {
-      "name": "ahgfsdlkfhjaklshdkfhaksldjfkasdlfjas/foobar",
-      "versions": []
-    },
-    {
-      "name": "ahgfsdlkfhjaklshdkfhaksldjfkasdlfjas/foobarrr",
-      "versions": []
-    },
-    {
-      "name": "circleci/aws-cli",
-      "versions": []
-    },
-    {
-      "name": "circleci/aws-code-deploy",
-      "versions": []
-    },
     {
       "name": "circleci/codecov-clojure",
       "versions": [
@@ -40,10 +19,6 @@
       ]
     },
     {
-      "name": "circleci/heroku",
-      "versions": []
-    },
-    {
       "name": "eric-hu/delivery-test",
       "versions": [
         {
@@ -51,22 +26,6 @@
           "source": "{}\n"
         }
       ]
-    },
-    {
-      "name": "eric-hu/test",
-      "versions": []
-    },
-    {
-      "name": "foo/aws-s3",
-      "versions": []
-    },
-    {
-      "name": "foo/elp",
-      "versions": []
-    },
-    {
-      "name": "foo/s3",
-      "versions": []
     },
     {
       "name": "ndintenfass/build-utils",
@@ -105,14 +64,6 @@
       ]
     },
     {
-      "name": "test/here-we-go",
-      "versions": []
-    },
-    {
-      "name": "test/new-orb",
-      "versions": []
-    },
-    {
       "name": "test/test",
       "versions": [
         {
@@ -120,14 +71,6 @@
           "source": "{}\n"
         }
       ]
-    },
-    {
-      "name": "test/trying-here",
-      "versions": []
-    },
-    {
-      "name": "testy-mctesterson-boo/dummy",
-      "versions": []
     }
   ]
 }
