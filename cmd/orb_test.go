@@ -1088,6 +1088,9 @@ var _ = Describe("Orb integration tests", func() {
 				tmpBytes = golden.Get(GinkgoT(), filepath.FromSlash("gql_orb_list/second_response.json"))
 				secondGqlResponse := string(tmpBytes)
 
+				tmpBytes = golden.Get(GinkgoT(), filepath.FromSlash("gql_orb_list/pretty_json_output.json"))
+				expectedOutput := string(tmpBytes)
+
 				// Use Gomega's default matcher instead of our custom appendPostHandler
 				// since this query doesn't pass in a token.
 				// Skip checking the content type field to make this test simpler.
@@ -1107,8 +1110,21 @@ var _ = Describe("Orb integration tests", func() {
 
 				Expect(err).ShouldNot(HaveOccurred())
 				Eventually(session).Should(gexec.Exit(0))
-				// TODO: define expected json output
-				Eventually(session.Out).Should(gbytes.Say("fdadsffdsasdf"))
+
+				// Use the pattern from
+				// https://onsi.github.io/gomega/#gexec-testing-external-processes
+				// instead of Say() since we want to perform a substring match, not a regexp
+				// match
+				completeOutput := string(session.Wait().Out.Contents())
+				Expect(completeOutput).Should(ContainSubstring(expectedOutput))
+				// - join pages together
+				// - strip "data" k-v wrapper, leave v
+				// - ignore/remove "hasNextPage"
+				// - strip "orbs" k-v wrapper, leave v
+				// - take/keep "totalCount"
+				// - rename "edges" to "orbs"
+				// - ignore/remove "cursor"
+				// - strip "node" k-v wrapper, leave v
 				Expect(testServer.ReceivedRequests()).Should(HaveLen(2))
 			})
 		})
