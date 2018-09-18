@@ -1217,9 +1217,6 @@ var _ = Describe("Orb integration tests", func() {
 					"--host", testServer.URL(),
 					"--verbose",
 				)
-			})
-
-			It("makes a namespace query and requests all orbs on that namespace", func() {
 				By("setting up a mock server")
 				// These requests and responses are generated from production data,
 				// but using a 5-per-page limit instead of the 20 requested.
@@ -1272,7 +1269,9 @@ var _ = Describe("Orb integration tests", func() {
 						ghttp.RespondWith(http.StatusOK, secondGqlResponse),
 					),
 				)
+			})
 
+			It("makes a namespace query and requests all orbs on that namespace", func() {
 				By("running the command")
 				session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 
@@ -1285,6 +1284,31 @@ var _ = Describe("Orb integration tests", func() {
 				Eventually(session.Out).Should(gbytes.Say("- notify_deploy"))
 				Eventually(session).Should(gexec.Exit(0))
 				Expect(testServer.ReceivedRequests()).Should(HaveLen(2))
+			})
+
+			Context("with the --json flag", func() {
+				BeforeEach(func() {
+					command = exec.Command(pathCLI,
+						"orb", "list", "circleci",
+						"--host", testServer.URL(),
+						"--verbose",
+						"--json",
+					)
+				})
+
+				It("sends a GraphQL request with 'uncertifiedOnly: false' and prints out json", func() {
+
+					By("running the command")
+					session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+
+					Expect(err).ShouldNot(HaveOccurred())
+					tmpBytes := golden.Get(GinkgoT(), filepath.FromSlash("gql_orb_list_uncertified/pretty_json_output.json"))
+					expectedOutput := string(tmpBytes)
+					completeOutput := string(session.Wait().Out.Contents())
+					Expect(completeOutput).Should(MatchJSON(expectedOutput))
+					Eventually(session).Should(gexec.Exit(0))
+					Expect(testServer.ReceivedRequests()).Should(HaveLen(2))
+				})
 			})
 		})
 	})
