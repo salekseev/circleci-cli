@@ -1302,7 +1302,7 @@ var _ = Describe("Orb integration tests", func() {
 					session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 
 					Expect(err).ShouldNot(HaveOccurred())
-					tmpBytes := golden.Get(GinkgoT(), filepath.FromSlash("gql_orb_list_uncertified/pretty_json_output.json"))
+					tmpBytes := golden.Get(GinkgoT(), filepath.FromSlash("gql_orb_list_with_namespace/pretty_json_output.json"))
 					expectedOutput := string(tmpBytes)
 					completeOutput := string(session.Wait().Out.Contents())
 					Expect(completeOutput).Should(MatchJSON(expectedOutput))

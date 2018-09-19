@@ -175,7 +175,15 @@ func listNamespaceOrbs(namespace string) error {
 	if err != nil {
 		return errors.Wrapf(err, "Failed to list orbs in namespace %s", namespace)
 	}
-	Logger.Info(orbs.String())
+	if orbListJSON {
+		orbJSON, err := json.MarshalIndent(orbs, "", "  ")
+		if err != nil {
+			return errors.Wrapf(err, "Failed to convert to convert to JSON")
+		}
+		Logger.Info(string(orbJSON))
+	} else {
+		Logger.Info(orbs.String())
+	}
 	return nil
 }
 

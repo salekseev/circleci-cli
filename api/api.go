@@ -104,7 +104,8 @@ type CreateOrbResponse struct {
 // OrbCollection is a container type for multiple orbs to share formatting
 // functions on them.
 type OrbCollection struct {
-	Orbs []Orb `json:"orbs"`
+	Orbs      []Orb  `json:"orbs"`
+	Namespace string `json:"namespace,omitempty"`
 }
 
 // String returns a text representation of all Orbs, intended for
@@ -934,6 +935,7 @@ query namespaceOrbs ($namespace: String, $after: String!) {
 		request := client.NewAuthorizedRequest(viper.GetString("token"), query)
 		request.Var("after", currentCursor)
 		request.Var("namespace", namespace)
+		orbs.Namespace = namespace
 
 		err := graphQLclient.Run(ctx, request, &result)
 		if err != nil {
@@ -951,6 +953,9 @@ query namespaceOrbs ($namespace: String, $after: String!) {
 				var o Orb
 				o.Name = edge.Node.Name
 				o.HighestVersion = v.Version
+				for _, v := range edge.Node.Versions {
+					o.Versions = append(o.Versions, OrbVersion(v))
+				}
 				err := yaml.Unmarshal([]byte(edge.Node.Versions[0].Source), &o)
 				if err != nil {
 					logger.Error(fmt.Sprintf("Corrupt Orb %s %s", edge.Node.Name, v.Version), err)
